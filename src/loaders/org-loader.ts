@@ -114,11 +114,19 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
       context.logger.warn(`[org-loader] ${filePath}: html contains h2-h6 tags but the heading regex matched none`);
     }
 
+    // The schema rejects an invalid date with an opaque zod dump that never
+    // mentions Org keywords; fail early with the actionable reason instead —
+    // the surrounding catch already prefixes the file path.
+    const date = keywords.date ? parseOrgDate(keywords.date) : new Date(NaN);
+    if (Number.isNaN(date.getTime())) {
+      throw new Error('#+DATE is missing or not a valid Org timestamp');
+    }
+
     const data = await context.parseData({
       id: filePath,
       data: {
         title: keywords.title ?? 'UNTITLED',
-        date: keywords.date ? parseOrgDate(keywords.date) : new Date(NaN),
+        date,
         tags: splitFiletags(keywords.filetags ?? ''),
         categories: splitFiletags(keywords.category ?? ''),
         description: keywords.description,
