@@ -8,7 +8,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 <header class="site-toolbar" data-toolbar>
   <nav class="toolbar-shell" aria-label="主导航">
     <a class="toolbar-brand" href="/" aria-label={`${SITE.title} 首页`}>[ {SITE.title.toUpperCase()} ]</a>
-    <div class="toolbar-links" aria-label="站点链接">
+    <div class="toolbar-links">
       {
         MENU.map((item, index) => (
           <a
