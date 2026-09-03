@@ -35,9 +35,7 @@ ${tags}
     <id>${url}</id>
     <link href="${url}"/>
     <published>${updated}</published>
-    <summary>
-      <![CDATA[${toPlainText(post.rendered?.html ?? '')}]]>
-    </summary>
+    <summary>${escapeXml(toPlainText(post.rendered?.html ?? ''))}</summary>
     <title>${escapeXml(post.data.title ?? 'UNTITLED')}</title>
     <updated>${updated}</updated>
   </entry>${index < total - 1 ? '\n' : ''}`;
