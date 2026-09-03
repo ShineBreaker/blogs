@@ -4,5 +4,5 @@ import sitemap from '@astrojs/sitemap';
 // https://astro.build/config
 export default defineConfig({
   site: 'https://shinebreaker.github.io',
-  integrations: [sitemap({ filter: (page) => !page.startsWith('/404') })],
+  integrations: [sitemap()],
 });
