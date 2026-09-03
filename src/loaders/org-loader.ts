@@ -165,7 +165,7 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
           // Trailing `sep` keeps in-dir names that merely start with `..`
           // (e.g. `..draft.org`) inside the collection, while real escapes
           // (`../…`) still bail out.
-          if (relative(baseDir, changedPath).startsWith('..')) return;
+          if (relative(baseDir, changedPath).startsWith('..' + sep)) return;
           if (!changedPath.endsWith('.org')) return;
           // Emacs lock files (`.#draft.org`) are dangling symlinks; reading
           // them always fails, so skip them instead of logging noise.
