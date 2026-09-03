@@ -5,9 +5,10 @@ interface Props {
   title?: string;
   description?: string;
   type?: 'website' | 'article';
+  publishedTime?: string;
 }
 
-const { title, description, type = 'website' } = Astro.props;
+const { title, description, type = 'website', publishedTime } = Astro.props;
 const pageTitle = title ? `${title} | ${SITE.title}` : SITE.title;
 const paletteIds = PALETTE.schemes.map((scheme) => scheme.id);
 const canonical = new URL(Astro.url.pathname, SITE.url).href;
@@ -28,6 +29,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 <meta property="og:site_name" content={SITE.title} />
 <meta property="og:description" content={description ?? SITE.description} />
 <meta property="og:locale" content="zh_CN" />
+{publishedTime && <meta property="article:published_time" content={publishedTime} />}
 <meta name="twitter:card" content="summary" />
 <script
   is:inline

@@ -11,9 +11,10 @@ interface Props {
   description?: string;
   pageClass?: string;
   type?: 'website' | 'article';
+  publishedTime?: string;
 }
 
-const { title, description, pageClass = 'index', type = 'website' } = Astro.props;
+const { title, description, pageClass = 'index', type = 'website', publishedTime } = Astro.props;
 // 文章页自带 article 模式的大 globe 背景，右下角 corner globe 仅在非文章页显示（对齐原主题 !is_post() 行为）。
 const showGlobe = pageClass !== 'post' && GLOBE.enabled;
 ---
@@ -21,7 +22,7 @@ const showGlobe = pageClass !== 'post' && GLOBE.enabled;
 <!doctype html>
 <html lang="zh-CN" data-site-root="/" data-palette={PALETTE.default}>
   <head>
-    <Head title={title} description={description} type={type} />
+    <Head title={title} description={description} type={type} publishedTime={publishedTime} />
   </head>
   <body class={`site-page site-page--${pageClass}`}>
     <a class="skip-link" href="#main-content">跳至正文</a>
