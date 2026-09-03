@@ -27,7 +27,7 @@ check:
     {{guix}} run check
 
 # Serve the built dist/ on :4321
-preview: build-site
+preview: build
     {{guix}} run preview
 
 # Install / sync dependencies
