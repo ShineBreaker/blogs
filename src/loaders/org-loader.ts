@@ -107,11 +107,11 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
     const keywords = fileData.data as Record<string, string | undefined>;
     const html = normalizeHeadings(String(fileData));
     const headings = extractHeadings(html);
-    if (html.length > 0 && headings.length === 0) {
-      // A non-empty body without a single match means the heading regex no
-      // longer fits the rendered markup — surface it instead of dropping the
-      // TOC silently.
-      context.logger.warn(`[org-loader] ${filePath}: rendered html is non-empty but no h2-h6 headings matched`);
+    if (/<h[2-6][\s>]/.test(html) && headings.length === 0) {
+      // The html clearly contains h2-h6 tags yet none were parsed — the
+      // heading regex no longer fits the rendered markup. Surface it instead
+      // of dropping the TOC silently; posts with no headings stay quiet.
+      context.logger.warn(`[org-loader] ${filePath}: html contains h2-h6 tags but the heading regex matched none`);
     }
 
     const data = await context.parseData({
@@ -162,6 +162,9 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
           // inside `baseDir` belong to this collection — injecting an Org
           // file from elsewhere (e.g. drafts under docs/) would make dev
           // content diverge from build.
+          // Trailing `sep` keeps in-dir names that merely start with `..`
+          // (e.g. `..draft.org`) inside the collection, while real escapes
+          // (`../…`) still bail out.
           if (relative(baseDir, changedPath).startsWith('..')) return;
           if (!changedPath.endsWith('.org')) return;
           // Emacs lock files (`.#draft.org`) are dangling symlinks; reading
