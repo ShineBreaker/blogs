@@ -2,5 +2,5 @@ import { defineConfig } from 'astro/config';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ShineBreaker.github.io',
+  site: 'https://shinebreaker.github.io',
 });
