@@ -29,7 +29,7 @@ const excerpt = postExcerpt(post.rendered?.html ?? '', EXCERPT_LENGTH);
   <footer class="post-card__footer">
     <span class="post-card__taxonomy">
       {
-        post.data.tags?.map((tag) => (
+        post.data.tags.map((tag) => (
           <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>
         ))
       }
