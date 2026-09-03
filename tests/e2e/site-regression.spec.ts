@@ -9,8 +9,23 @@ test('atom feed escapes summaries, declares the license and mirrors the home lis
   expect(body).toContain('CC BY 4.0');
 
   await page.goto('/');
-  const cardCount = await page.locator('.post-card').count();
-  expect((body.match(/<entry>/g) ?? []).length).toBe(cardCount);
+  // 首页只渲染前 10 篇（PAGE_SIZE），feed 含全部文章，条目数不可能相等；
+  // 改为子集校验：首页每篇文章的路径都必须出现在 feed 的 <link href> 中。
+  const feedLinks = new Set<string>();
+  for (const match of body.matchAll(/<link href="([^"]+)"/g)) {
+    if (match[1]) feedLinks.add(new URL(match[1]).pathname);
+  }
+  const cardLinks = await page.locator('.post-card h2 a').evaluateAll((anchors) =>
+    anchors.map((anchor) => {
+      const href = anchor.getAttribute('href');
+      if (!href) throw new Error('Post card link is missing an href');
+      return new URL(href, location.origin).pathname;
+    })
+  );
+  expect(cardLinks.length).toBeGreaterThan(0);
+  for (const cardLink of cardLinks) {
+    expect(feedLinks).toContain(cardLink);
+  }
 });
 
 test('search surfaces posts from the built pagefind index', async ({ page }) => {
