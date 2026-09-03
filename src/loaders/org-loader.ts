@@ -45,10 +45,12 @@ function extractHeadings(html: string): Array<{ depth: number; slug: string; tex
   // `id` may not stay the first attribute if a future rehype plugin adds
   // properties before it, so allow attributes in any position.
   for (const match of html.matchAll(/<h([2-6])\s[^>]*?\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)) {
+    const [, depth, slug, text] = match;
+    if (depth === undefined || slug === undefined || text === undefined) continue;
     headings.push({
-      depth: Number(match[1]),
-      slug: match[2],
-      text: match[3].replace(/<[^>]+>/g, '').trim(),
+      depth: Number(depth),
+      slug,
+      text: text.replace(/<[^>]+>/g, '').trim(),
     });
   }
   return headings;

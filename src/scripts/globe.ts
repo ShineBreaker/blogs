@@ -84,7 +84,9 @@ export function mountAsciiGlobe(host: HTMLElement): GlobeController {
   document.addEventListener('visibilitychange', onVisibility);
   reducedMotion.addEventListener('change', onReducedMotion);
 
-  const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(([entry]) => {
+  const observer = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver((entries) => {
+    const [entry] = entries;
+    if (!entry) return;
     isVisible = entry.isIntersecting;
     if (isVisible) start(); else stop();
   });

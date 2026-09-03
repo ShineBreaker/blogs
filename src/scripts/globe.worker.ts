@@ -62,8 +62,11 @@ function normaliseLongitude(longitude: number): number {
 function pointInPolygon(longitude: number, latitude: number, polygon: readonly GeoPoint[]): boolean {
   let inside = false;
   for (let index = 0, previous = polygon.length - 1; index < polygon.length; previous = index, index += 1) {
-    const [currentLongitude, currentLatitude] = polygon[index];
-    const [previousLongitude, previousLatitude] = polygon[previous];
+    const currentPoint = polygon[index];
+    const previousPoint = polygon[previous];
+    if (!currentPoint || !previousPoint) continue;
+    const [currentLongitude, currentLatitude] = currentPoint;
+    const [previousLongitude, previousLatitude] = previousPoint;
     const crossesLatitude = (currentLatitude > latitude) !== (previousLatitude > latitude);
     if (crossesLatitude) {
       const boundaryLongitude = (previousLongitude - currentLongitude) * (latitude - currentLatitude)

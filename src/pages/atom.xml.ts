@@ -43,7 +43,8 @@ ${tags}
 
 export async function GET() {
   const posts = sortPosts(await getCollection('posts'));
-  const updated = posts.length ? formatAtomDate(posts[0].data.date) : formatAtomDate(new Date());
+  const latest = posts[0];
+  const updated = latest ? formatAtomDate(latest.data.date) : formatAtomDate(new Date());
 
   const body = `<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
