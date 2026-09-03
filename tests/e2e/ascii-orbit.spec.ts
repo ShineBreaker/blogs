@@ -43,12 +43,15 @@ test('home renders terminal log stream, toolbar and corner globe', async ({ page
   await expect(page.getByRole('heading', { name: 'LATEST LOGS' })).toBeVisible();
   // 断言排序行为本身：time[datetime] 由 formatDate 输出 YYYY-MM-DD，字典序
   // 即时间序，序列单调非增即新→旧。与具体文章标题和数量完全解耦。
+  // evaluateAll 回调只做数据提取：strictest 下回调参数是 HTMLElement | SVGElement
+  // （没有 .dateTime），且 getAttribute 可返回 null——用 ?? '' 兜住保证 string[]。
+  // 比较放回测试侧：等于自身降序排列 ⇔ 单调非增。
   const cardCount = await page.locator('.post-card').count();
   expect(cardCount).toBeGreaterThanOrEqual(1);
-  const datesSortedDesc = await page.locator('.post-card time').evaluateAll((times) => (
-    times.every((time, index) => index === 0 || times[index - 1].dateTime >= time.dateTime)
+  const dates = await page.locator('.post-card time').evaluateAll((times) => (
+    times.map((time) => time.getAttribute('datetime') ?? '')
   ));
-  expect(datesSortedDesc).toBe(true);
+  expect(dates).toEqual([...dates].sort().reverse());
   await expect(page.locator('[data-ascii-globe][data-globe-mode="corner"]')).toHaveCount(1);
   await expect(page.locator('.site-footer')).not.toContainText('built with');
   await expect(page.locator('.toolbar-shell')).toHaveCSS('border-radius', '0px');
