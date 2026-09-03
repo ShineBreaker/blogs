@@ -41,11 +41,9 @@ test('home renders terminal log stream, toolbar and corner globe', async ({ page
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'LATEST LOGS' })).toBeVisible();
-  await expect(page.locator('.post-card h2')).toHaveText([
-    /AI 工作流进化史/,
-    /Windows\/Linux/,
-    /新年伊始/
-  ]);
+  // 只断言首张卡片是日期最新的文章：全量数组断言会把文章数量钉死，
+  // 发布第 4 篇即误红；排序意图由 first() 承载。
+  await expect(page.locator('.post-card h2').first()).toHaveText(/AI 工作流进化史/);
   await expect(page.locator('[data-ascii-globe][data-globe-mode="corner"]')).toHaveCount(1);
   await expect(page.locator('.site-footer')).not.toContainText('built with');
   await expect(page.locator('.toolbar-shell')).toHaveCSS('border-radius', '0px');
