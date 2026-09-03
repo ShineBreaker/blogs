@@ -37,7 +37,6 @@ export function mountAsciiGlobe(host: HTMLElement): GlobeController {
   }
 
   const worker = new Worker(new URL('./globe.worker.ts', import.meta.url), { type: 'module' });
-  const frameInterval = 1000 / (mode === 'article' ? (window.innerWidth < 700 ? 12 : 18) : 12);
   let animationFrame = 0;
   let lastFrame = 0;
   let isVisible = !document.hidden;
@@ -53,6 +52,9 @@ export function mountAsciiGlobe(host: HTMLElement): GlobeController {
 
   const requestFrame = (timestamp: number) => {
     if (destroyed || isPaused || !isVisible || document.hidden || reducedMotion.matches) return;
+    // Re-read every frame so resizing across the 700px breakpoint switches
+    // the frame rate immediately instead of keeping the mount-time value.
+    const frameInterval = 1000 / (mode === 'article' ? (window.innerWidth < 700 ? 12 : 18) : 12);
     if (timestamp - lastFrame >= frameInterval) {
       lastFrame = timestamp;
       renderFrame(timestamp / 9000);
