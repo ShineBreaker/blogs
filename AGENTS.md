@@ -46,7 +46,7 @@ Post IDs are derived from the file name and are also used as the URL slug. `#+DA
 
 ### Org authoring rules
 
-- Emphasis markers (`*bold*`, `/italic/`, `=code=`) must be followed by a space or English punctuation — never by CJK punctuation. This matches Emacs `org-element` behavior and uniorg's parser; see `docs/VERIFICATION.md`.
+- Emphasis markers (`*bold*`, `/italic/`, `=code=`) must be followed by a space or English punctuation — never by CJK punctuation. This matches Emacs `org-element` behavior and uniorg's parser.
 - Use `#+BEGIN_SRC <lang>` for code blocks; `rehype-highlight` needs a language on every block.
 - Headings inside a post start at `*` and are shifted to `h2+` on render (the page has one `h1`).
 
@@ -66,6 +66,7 @@ The repository splits licensing by asset kind — do not blur the two:
 - `src/utils/excerpt.ts`: excerpt generation and heading normalization. Keep these pure — no Hexo helpers, no component imports.
 - `src/consts.ts`: single source of truth for site metadata, menu, palette schemes and globe settings.
 - `astro.config.ts` is the only Vite configuration surface (fonts, workers, base path). Do not add a separate `vite.config.ts`.
+- SEO output is split in two: the `@astrojs/sitemap` integration is registered in `astro.config.ts`, while `robots.txt` is emitted by the static route in `src/pages/robots.txt.ts`, which references `SITE.url`. `robots.txt` is therefore not a static file in `public/`.
 
 ## Accessibility and motion
 
@@ -77,7 +78,7 @@ The repository splits licensing by asset kind — do not blur the two:
 ## Generated files
 
 - `dist/` (Astro output + Pagefind index) is generated and ignored.
-- `public/fonts/` ships the Departure Mono woff2; the CSS `@font-face` in `src/styles/main.css` references it via a public-path URL.
+- `public/fonts/` ships the Departure Mono woff2; the CSS `@font-face` in `src/styles/main.css` references it via a public-path URL. `public/favicon.svg` provides the site favicon.
 
 ## Git conventions
 
