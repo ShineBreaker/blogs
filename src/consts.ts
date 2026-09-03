@@ -4,7 +4,6 @@ export const SITE = {
   description: 'Self blog.',
   author: 'BrokenShine',
   url: 'https://shinebreaker.github.io',
-  language: 'zh-cn',
 } as const;
 
 export const MENU = [
@@ -34,7 +33,7 @@ export const PALETTE = {
   ],
 } as const;
 
-export const GLOBE = { enabled: true, fps: 18 } as const;
+export const GLOBE = { enabled: true } as const;
 
 /** 文章内容的授权协议（CC BY 4.0）。 */
 export const CONTENT_LICENSE = {
