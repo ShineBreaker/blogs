@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import { SITE } from '../consts';
+import { CONTENT_LICENSE, SITE } from '../consts';
 import { postUrl } from '../utils/post';
 import { sortPosts } from '../utils/pagination';
 import { toPlainText } from '../utils/excerpt';
@@ -55,7 +55,7 @@ export async function GET() {
   <id>${SITE.url}/</id>
   <link href="${SITE.url}/" rel="alternate"/>
   <link href="${SITE.url}/atom.xml" rel="self"/>
-  <rights>All rights reserved ${new Date().getFullYear()}, ${escapeXml(SITE.author)}</rights>
+  <rights>© ${new Date().getFullYear()} ${escapeXml(SITE.author)} · ${CONTENT_LICENSE.name}</rights>
   <subtitle>${escapeXml(SITE.subtitle)}</subtitle>
   <title>${escapeXml(SITE.title)}</title>
   <updated>${updated}</updated>
