@@ -41,9 +41,14 @@ test('home renders terminal log stream, toolbar and corner globe', async ({ page
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'LATEST LOGS' })).toBeVisible();
-  // 只断言首张卡片是日期最新的文章：全量数组断言会把文章数量钉死，
-  // 发布第 4 篇即误红；排序意图由 first() 承载。
-  await expect(page.locator('.post-card h2').first()).toHaveText(/AI 工作流进化史/);
+  // 断言排序行为本身：time[datetime] 由 formatDate 输出 YYYY-MM-DD，字典序
+  // 即时间序，序列单调非增即新→旧。与具体文章标题和数量完全解耦。
+  const cardCount = await page.locator('.post-card').count();
+  expect(cardCount).toBeGreaterThanOrEqual(1);
+  const datesSortedDesc = await page.locator('.post-card time').evaluateAll((times) => (
+    times.every((time, index) => index === 0 || times[index - 1].dateTime >= time.dateTime)
+  ));
+  expect(datesSortedDesc).toBe(true);
   await expect(page.locator('[data-ascii-globe][data-globe-mode="corner"]')).toHaveCount(1);
   await expect(page.locator('.site-footer')).not.toContainText('built with');
   await expect(page.locator('.toolbar-shell')).toHaveCSS('border-radius', '0px');
