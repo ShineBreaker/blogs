@@ -42,7 +42,9 @@ function splitFiletags(value: string): string[] {
 /** Extract `h2`–`h6` headings (with their slug ids) from rendered HTML. */
 function extractHeadings(html: string): Array<{ depth: number; slug: string; text: string }> {
   const headings: Array<{ depth: number; slug: string; text: string }> = [];
-  for (const match of html.matchAll(/<h([2-6])\sid="([^"]+)">([\s\S]*?)<\/h\1>/g)) {
+  // `id` may not stay the first attribute if a future rehype plugin adds
+  // properties before it, so allow attributes in any position.
+  for (const match of html.matchAll(/<h([2-6])\s[^>]*?\bid="([^"]+)"[^>]*>([\s\S]*?)<\/h\1>/g)) {
     headings.push({
       depth: Number(match[1]),
       slug: match[2],
@@ -100,6 +102,12 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
     const keywords = fileData.data as Record<string, string | undefined>;
     const html = normalizeHeadings(String(fileData));
     const headings = extractHeadings(html);
+    if (html.length > 0 && headings.length === 0) {
+      // A non-empty body without a single match means the heading regex no
+      // longer fits the rendered markup — surface it instead of dropping the
+      // TOC silently.
+      context.logger.warn(`[org-loader] ${filePath}: rendered html is non-empty but no h2-h6 headings matched`);
+    }
 
     const data = await context.parseData({
       id: filePath,
