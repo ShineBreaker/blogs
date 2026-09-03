@@ -23,6 +23,9 @@ export function mountMedia(): void {
     image.addEventListener('click', enlarge);
     image.addEventListener('keydown', (event) => {
       if (event.key === 'Enter' || event.key === ' ') {
+        // Holding the key keeps firing keydown via auto-repeat; the dialog
+        // must open once, not stack one per repeat.
+        if (event.repeat) return;
         event.preventDefault();
         enlarge();
       }
