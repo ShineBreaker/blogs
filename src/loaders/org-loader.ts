@@ -80,10 +80,13 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
     return files;
   };
 
+  /** Entry id: root-relative path with forward slashes, matching store keys. */
+  const entryId = (file: string, context: LoaderContext): string =>
+    relative(fileURLToPath(context.config.root), file).split(sep).join('/');
+
   const processFile = async (file: string, context: LoaderContext) => {
     const raw = readFileSync(file, 'utf8');
-    const rootDir = fileURLToPath(context.config.root);
-    const filePath = relative(rootDir, file).split(sep).join('/');
+    const filePath = entryId(file, context);
 
     const fileData = await unified()
       .use(uniorgParse)
@@ -129,8 +132,9 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
     };
   };
 
-  // `load` re-runs on every watcher event, so register the watcher once —
-  // otherwise each change would stack a fresh set of listeners.
+  // `load` may be called again (e.g. when Astro refreshes the collection),
+  // so register the watcher once — otherwise each call would stack a fresh
+  // set of listeners.
   let watched = false;
 
   const load = async (context: LoaderContext): Promise<void> => {
@@ -144,7 +148,8 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
       }
     }
 
-    // Keep the dev server in sync when `.org` files change.
+    // Keep the dev server in sync when `.org` files change, re-parsing only
+    // the affected entry instead of rebuilding the whole collection.
     const watcher = context.watcher;
     if (watcher && !watched) {
       watched = true;
@@ -152,7 +157,15 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
         watcher.on(event, (changed: string | URL) => {
           const changedPath = typeof changed === 'string' ? changed : fileURLToPath(changed);
           if (!changedPath.endsWith('.org')) return;
-          void load(context);
+          if (event === 'unlink') {
+            context.store.delete(entryId(changedPath, context));
+            return;
+          }
+          void processFile(changedPath, context)
+            .then((entry) => context.store.set(entry))
+            .catch((error: unknown) => {
+              context.logger.error(`[org-loader] failed to parse ${changedPath}: ${String(error)}`);
+            });
         });
       }
     }
