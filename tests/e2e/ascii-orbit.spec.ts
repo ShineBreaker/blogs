@@ -31,11 +31,16 @@ async function readGlobeMetrics(page: Page, mode: 'corner' | 'article'): Promise
   });
 }
 
+async function firstArticlePath(page: Page): Promise<string> {
+  const href = await page.locator('.post-card h2 a').first().getAttribute('href');
+  if (!href) throw new Error('No article link rendered on the home listing');
+  return href;
+}
+
 test('home renders terminal log stream, toolbar and corner globe', async ({ page }, testInfo) => {
   await page.goto('/');
 
   await expect(page.getByRole('heading', { name: 'LATEST LOGS' })).toBeVisible();
-  await expect(page.locator('.post-card')).toHaveCount(3);
   await expect(page.locator('.post-card h2')).toHaveText([
     /AI 工作流进化史/,
     /Windows\/Linux/,
@@ -81,7 +86,8 @@ test('palette choice persists through the required full reload', async ({ page }
 });
 
 test('article keeps one primary heading inside the centered globe stage', async ({ page }) => {
-  await page.goto('/posts/2026-05-15/');
+  await page.goto('/');
+  await page.goto(await firstArticlePath(page));
 
   await expect(page.locator('h1')).toHaveCount(1);
   await expect(page.locator('.article-stage [data-globe-mode="article"]')).toHaveCount(1);
@@ -129,6 +135,7 @@ test('globe has a round silhouette with distinct land, coast and ocean layers', 
   test.skip(testInfo.project.name !== 'chromium', 'desktop geometry and glyph metrics');
 
   await page.goto('/');
+  const articlePath = await firstArticlePath(page);
   const corner = await readGlobeMetrics(page, 'corner');
   expect(corner.aspectRatio).toBeGreaterThanOrEqual(0.9);
   expect(corner.aspectRatio).toBeLessThanOrEqual(1.1);
@@ -142,7 +149,7 @@ test('globe has a round silhouette with distinct land, coast and ocean layers', 
   ));
   expect(new Set(layerColors).size).toBe(3);
 
-  await page.goto('/posts/2026-05-15/');
+  await page.goto(articlePath);
   const article = await readGlobeMetrics(page, 'article');
   expect(article.aspectRatio).toBeGreaterThanOrEqual(0.9);
   expect(article.aspectRatio).toBeLessThanOrEqual(1.1);
