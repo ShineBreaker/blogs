@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync } from 'node:fs';
-import { relative, resolve, sep } from 'node:path';
+import { basename, relative, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import type { Loader, LoaderContext } from 'astro/loaders';
 import { unified } from 'unified';
@@ -158,7 +158,15 @@ export function orgLoader(options: OrgLoaderOptions): Loader {
       for (const event of ['add', 'change', 'unlink'] as const) {
         watcher.on(event, (changed: string | URL) => {
           const changedPath = typeof changed === 'string' ? changed : fileURLToPath(changed);
+          // The dev watcher observes the whole project root, but only files
+          // inside `baseDir` belong to this collection — injecting an Org
+          // file from elsewhere (e.g. drafts under docs/) would make dev
+          // content diverge from build.
+          if (relative(baseDir, changedPath).startsWith('..')) return;
           if (!changedPath.endsWith('.org')) return;
+          // Emacs lock files (`.#draft.org`) are dangling symlinks; reading
+          // them always fails, so skip them instead of logging noise.
+          if (basename(changedPath).startsWith('.#')) return;
           if (event === 'unlink') {
             context.store.delete(entryId(changedPath, context));
             return;
