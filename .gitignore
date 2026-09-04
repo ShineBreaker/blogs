@@ -4,3 +4,4 @@ dist/
 .astro/
 .mimosa/
 test-results/
+.agents/workfile/
