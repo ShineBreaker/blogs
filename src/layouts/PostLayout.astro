@@ -54,7 +54,7 @@ const { Content } = await render(entry);
       {
         prev && (
           <a href={postUrl(prev)}>
-            ← <span>PREV</span>
+            <span>← PREV</span>
             <strong>{prev.data.title}</strong>
           </a>
         )
@@ -62,8 +62,8 @@ const { Content } = await render(entry);
       {
         next && (
           <a class="post-navigation__next" href={postUrl(next)}>
-            <span>NEXT</span>
-            <strong>{next.data.title}</strong> →
+            <span>NEXT →</span>
+            <strong>{next.data.title}</strong>
           </a>
         )
       }
