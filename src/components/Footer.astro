@@ -1,9 +1,10 @@
 ---
-import { SITE } from '../consts';
+import { RSS, SITE } from '../consts';
 
 const year = new Date().getFullYear();
 ---
 
 <footer class="site-footer">
   <p>[ EOF ] &copy; {year} {SITE.author || SITE.title}</p>
+  {RSS && <a href={RSS}>[ ATOM ]</a>}
 </footer>
