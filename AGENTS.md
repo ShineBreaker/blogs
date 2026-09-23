@@ -68,6 +68,13 @@ The repository splits licensing by asset kind — do not blur the two:
 - `astro.config.ts` is the only Vite configuration surface (fonts, workers, base path). Do not add a separate `vite.config.ts`.
 - SEO output is split in two: the `@astrojs/sitemap` integration is registered in `astro.config.ts`, while `robots.txt` is emitted by the static route in `src/pages/robots.txt.ts`, which references `SITE.url`. `robots.txt` is therefore not a static file in `public/`.
 
+## Visual language
+
+`DESIGN.md` pins the ASCII Orbit vocabulary — typeface roles, line styles, the
+ASCII glyph alphabet, surface metaphors and motion rules. Keep visual changes
+inside that vocabulary; extend the doc first when a new element needs new
+furniture.
+
 ## Accessibility and motion
 
 - Keep the skip link, landmarks and one page-level `h1`.
