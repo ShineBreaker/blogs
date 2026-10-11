@@ -4,7 +4,7 @@
 
 BrokenShine 的个人博客，记录生活、思考、Linux 与 AI 工作流的折腾笔记。文章以 [Org mode](https://orgmode.org/) 编写，站点为纯静态构建后部署到 GitHub Pages。
 
-线上地址：<https://ShineBreaker.github.io>
+线上地址：<https://ShineBreaker.github.io/blogs>
 
 ## 写作
 
