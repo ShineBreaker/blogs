@@ -4,7 +4,7 @@ import Toolbar from '../components/Toolbar.astro';
 import Footer from '../components/Footer.astro';
 import AsciiGlobe from '../components/AsciiGlobe.astro';
 import ContentLicense from '../components/ContentLicense.astro';
-import { GLOBE, PALETTE } from '../consts';
+import { BASE, GLOBE, PALETTE } from '../consts';
 
 interface Props {
   title?: string;
@@ -20,7 +20,7 @@ const showGlobe = pageClass !== 'post' && GLOBE.enabled;
 ---
 
 <!doctype html>
-<html lang="zh-CN" data-site-root="/" data-palette={PALETTE.default}>
+<html lang="zh-CN" data-site-root={`${BASE}/`} data-palette={PALETTE.default}>
   <head>
     <!-- exactOptionalPropertyTypes：可选字段仅在存在时传入，而不是显式传 undefined -->
     <Head

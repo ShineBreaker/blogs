@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content';
-import { EXCERPT_LENGTH } from '../consts';
+import { BASE, EXCERPT_LENGTH } from '../consts';
 import { formatDate } from '../utils/date';
 import { postUrl } from '../utils/post';
 import { postExcerpt } from '../utils/excerpt';
@@ -30,7 +30,7 @@ const excerpt = postExcerpt(post.rendered?.html ?? '', EXCERPT_LENGTH);
     <span class="post-card__taxonomy">
       {
         post.data.tags.map((tag) => (
-          <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>
+          <a href={`${BASE}/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>
         ))
       }
     </span>

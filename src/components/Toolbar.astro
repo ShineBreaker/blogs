@@ -1,5 +1,5 @@
 ---
-import { MENU, PALETTE, SITE } from '../consts';
+import { BASE, MENU, PALETTE, SITE } from '../consts';
 
 const defaultScheme = PALETTE.schemes.find((scheme) => scheme.id === PALETTE.default) ?? PALETTE.schemes[0];
 const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
@@ -7,7 +7,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
 
 <header class="site-toolbar" data-toolbar>
   <nav class="toolbar-shell" aria-label="主导航">
-    <a class="toolbar-brand" href="/" aria-label={`${SITE.title} 首页`}>[ {SITE.title.toUpperCase()} ]</a>
+    <a class="toolbar-brand" href={`${BASE}/`} aria-label={`${SITE.title} 首页`}>[ {SITE.title.toUpperCase()} ]</a>
     <div class="toolbar-links">
       {
         MENU.map((item, index) => (
@@ -23,7 +23,7 @@ const isExternal = (href: string): boolean => /^https?:\/\//.test(href);
       }
     </div>
     <div class="toolbar-actions">
-      <a class="toolbar-action" href="/search/" aria-label="搜索">[/]</a>
+      <a class="toolbar-action" href={`${BASE}/search/`} aria-label="搜索">[/]</a>
       <button class="toolbar-action toolbar-palette-trigger" type="button" popovertarget="palette-menu" aria-controls="palette-menu" aria-label="切换配色">
         <span data-current-palette-name>{defaultScheme?.name}</span>
       </button>

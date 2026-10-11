@@ -1,4 +1,6 @@
 ---
+import { withBase } from '../consts';
+
 interface TaxonomyItem {
   name: string;
   count: number;
@@ -27,7 +29,7 @@ const sorted = [...items].sort((a, b) => a.name.localeCompare(b.name));
         {
           sorted.map((item) => (
             <li>
-              <a href={`/${path}/${encodeURIComponent(item.name)}/`}>
+              <a href={withBase(`/${path}/${encodeURIComponent(item.name)}/`)}>
                 <span>#</span>
                 {item.name}
                 <small>{item.count}</small>

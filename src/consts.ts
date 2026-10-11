@@ -3,21 +3,28 @@ export const SITE = {
   subtitle: "I'm still waiting for you.",
   description: 'Self blog.',
   author: 'BrokenShine',
+  // 仅 origin（不含 base 路径）；拼接完整 URL 时要带上 BASE。
   url: 'https://shinebreaker.github.io',
 } as const;
 
+/** 站点 base 路径（`/blogs`，无尾斜杠），构建时由 Astro 内联。 */
+export const BASE = import.meta.env.BASE_URL;
+
+/** 拼接 base 前缀：Astro 不会自动改写组件里的手写根相对链接。 */
+export const withBase = (path: string): string => `${BASE}${path}`;
+
 export const MENU = [
-  { label: 'Home', href: '/' },
-  { label: 'Archives', href: '/archives' },
-  { label: 'Tags', href: '/tags' },
-  { label: 'Categories', href: '/categories' },
+  { label: 'Home', href: withBase('/') },
+  { label: 'Archives', href: withBase('/archives') },
+  { label: 'Tags', href: withBase('/tags') },
+  { label: 'Categories', href: withBase('/categories') },
   { label: 'Codeberg', href: 'https://codeberg.org/BrokenShine' },
   { label: 'Gitee', href: 'https://gitee.com/brokenshine' },
   { label: 'GitHub', href: 'https://github.com/hejianxian' },
   { label: 'Bilibili', href: 'https://space.bilibili.com/310949242' },
 ] as const;
 
-export const RSS = '/atom.xml';
+export const RSS = withBase('/atom.xml');
 
 export const EXCERPT_LENGTH = 220;
 

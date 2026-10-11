@@ -1,8 +1,10 @@
 @layer reset, tokens, base, layout, components, utilities;
 
+/* Vite 处理相对 url 引用的 src 内资产：dev 与 build（含 base 前缀）都正确，
+   且构建产物带指纹；不要改回 public/ 的根绝对路径——在 /blogs base 下会断。 */
 @font-face {
   font-family: "Departure Mono UI";
-  src: url("/fonts/DepartureMonoNerdFontMono-ASCII.woff2") format("woff2");
+  src: url("../assets/fonts/DepartureMonoNerdFontMono-ASCII.woff2") format("woff2");
   font-display: swap;
   unicode-range: U+0020-007E, U+00A0, U+00B7, U+2013-2014, U+2018-201E, U+2026, U+2190-2194, U+21B5, U+2500-257F;
 }

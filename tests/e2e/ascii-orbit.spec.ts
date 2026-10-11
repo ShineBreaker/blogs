@@ -1,5 +1,8 @@
 import { expect, test, type Page } from '@playwright/test';
 
+// 站点挂在 /blogs base 下；goto('/') 是根相对解析，必须显式带前缀。
+const BASE = '/blogs';
+
 type GlobeMetrics = {
   aspectRatio: number;
   fillRatio: number;
@@ -38,7 +41,7 @@ async function firstArticlePath(page: Page): Promise<string> {
 }
 
 test('home renders terminal log stream, toolbar and corner globe', async ({ page }, testInfo) => {
-  await page.goto('/');
+  await page.goto(`${BASE}/`);
 
   await expect(page.getByRole('heading', { name: 'LATEST LOGS' })).toBeVisible();
   // 断言排序行为本身：time[datetime] 由 formatDate 输出 YYYY-MM-DD，字典序
@@ -83,7 +86,7 @@ test('home renders terminal log stream, toolbar and corner globe', async ({ page
 });
 
 test('palette choice persists through the required full reload', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(`${BASE}/`);
   await page.getByRole('button', { name: '切换配色' }).click();
   await page.getByRole('button', { name: 'Nord', exact: true }).click();
 
@@ -92,7 +95,7 @@ test('palette choice persists through the required full reload', async ({ page }
 });
 
 test('article keeps one primary heading inside the centered globe stage', async ({ page }) => {
-  await page.goto('/');
+  await page.goto(`${BASE}/`);
   await page.goto(await firstArticlePath(page));
 
   await expect(page.locator('h1')).toHaveCount(1);
@@ -140,7 +143,7 @@ test('article keeps one primary heading inside the centered globe stage', async 
 test('globe has a round silhouette with distinct land, coast and ocean layers', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'chromium', 'desktop geometry and glyph metrics');
 
-  await page.goto('/');
+  await page.goto(`${BASE}/`);
   const articlePath = await firstArticlePath(page);
   const corner = await readGlobeMetrics(page, 'corner');
   expect(corner.aspectRatio).toBeGreaterThanOrEqual(0.9);
@@ -171,7 +174,7 @@ test('globe has a round silhouette with distinct land, coast and ocean layers', 
 
 test('mobile toolbar touches both viewport edges, keeps full palette names and does not overflow', async ({ page }, testInfo) => {
   test.skip(testInfo.project.name !== 'mobile-chromium', 'mobile-specific geometry');
-  await page.goto('/');
+  await page.goto(`${BASE}/`);
 
   await expect(page.locator('.toolbar-palette-trigger')).toBeVisible();
   const bounds = await page.locator('.site-toolbar').evaluate((element) => {

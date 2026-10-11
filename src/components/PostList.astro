@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content';
 import PostCard from './PostCard.astro';
-import { SITE } from '../consts';
+import { BASE, SITE } from '../consts';
 
 interface Props {
   posts: CollectionEntry<'posts'>[];
@@ -11,9 +11,9 @@ interface Props {
 
 const { posts, pageNum, lastPage } = Astro.props;
 
-/** Paginator URLs, with page 1 living at the root (Hexo convention). */
-const pageUrl = (num: number): string => (num === 1 ? '/' : `/page/${num}/`);
-const prevUrl = pageNum > 2 ? pageUrl(pageNum - 1) : '/';
+/** Paginator URLs, with page 1 living at the base root (Hexo convention). */
+const pageUrl = (num: number): string => (num === 1 ? `${BASE}/` : `${BASE}/page/${num}/`);
+const prevUrl = pageNum > 2 ? pageUrl(pageNum - 1) : `${BASE}/`;
 const nextUrl = pageUrl(pageNum + 1);
 ---
 

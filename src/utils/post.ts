@@ -1,4 +1,5 @@
 import type { CollectionEntry } from 'astro:content';
+import { withBase } from '../consts';
 
 /** Entry id (`src/content/posts/<name>.org`) → `<name>` URL slug. */
 export function postSlug(entry: CollectionEntry<'posts'>): string {
@@ -7,5 +8,5 @@ export function postSlug(entry: CollectionEntry<'posts'>): string {
 
 /** Canonical post URL. */
 export function postUrl(entry: CollectionEntry<'posts'>): string {
-  return `/posts/${encodeURIComponent(postSlug(entry))}/`;
+  return withBase(`/posts/${encodeURIComponent(postSlug(entry))}/`);
 }

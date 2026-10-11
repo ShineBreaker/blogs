@@ -1,6 +1,6 @@
 import { getCollection } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
-import { CONTENT_LICENSE, SITE } from '../consts';
+import { BASE, CONTENT_LICENSE, SITE } from '../consts';
 import { postUrl } from '../utils/post';
 import { sortPosts } from '../utils/pagination';
 import { toPlainText } from '../utils/excerpt';
@@ -23,7 +23,7 @@ function entryXml(post: CollectionEntry<'posts'>, index: number, total: number):
   const url = `${SITE.url}${postUrl(post)}`;
   const updated = formatAtomDate(post.data.date);
   const tags = post.data.tags
-    .map((tag) => `    <category term="${escapeXml(tag)}" scheme="${SITE.url}/tags/${encodeURIComponent(tag)}/"/>`)
+    .map((tag) => `    <category term="${escapeXml(tag)}" scheme="${SITE.url}${BASE}/tags/${encodeURIComponent(tag)}/"/>`)
     .join('\n');
 
   return `  <entry>
@@ -51,9 +51,9 @@ export async function GET() {
   <author>
     <name>${escapeXml(SITE.author)}</name>
   </author>
-  <id>${SITE.url}/</id>
-  <link href="${SITE.url}/" rel="alternate"/>
-  <link href="${SITE.url}/atom.xml" rel="self"/>
+  <id>${SITE.url}${BASE}/</id>
+  <link href="${SITE.url}${BASE}/" rel="alternate"/>
+  <link href="${SITE.url}${BASE}/atom.xml" rel="self"/>
   <rights>© ${new Date().getFullYear()} ${escapeXml(SITE.author)} · ${CONTENT_LICENSE.name}</rights>
   <subtitle>${escapeXml(SITE.subtitle)}</subtitle>
   <title>${escapeXml(SITE.title)}</title>

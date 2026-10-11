@@ -1,5 +1,5 @@
 ---
-import { SITE, PALETTE, RSS } from '../consts';
+import { BASE, PALETTE, RSS, SITE } from '../consts';
 
 interface Props {
   title?: string;
@@ -20,7 +20,7 @@ const canonical = new URL(Astro.url.pathname, SITE.url).href;
 <title>{pageTitle}</title>
 <meta name="description" content={description ?? SITE.description} />
 <meta name="generator" content={Astro.generator} />
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href={`${BASE}/favicon.svg`} />
 <link rel="canonical" href={canonical} />
 {RSS && <link rel="alternate" href={RSS} title={SITE.title} type="application/atom+xml" />}
 <meta property="og:type" content={type} />

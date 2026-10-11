@@ -40,7 +40,8 @@ export default defineConfig({
   ],
   webServer: {
     command: 'corepack pnpm build && corepack pnpm preview',
-    url: 'http://127.0.0.1:4321',
+    // 健康检查必须落在 /blogs 下：base 之外的根路径返回 404。
+    url: 'http://127.0.0.1:4321/blogs/',
     reuseExistingServer: !process.env.CI,
     timeout: 120_000
   }

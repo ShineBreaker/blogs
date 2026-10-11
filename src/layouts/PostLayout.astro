@@ -4,6 +4,7 @@ import { render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import { formatDate } from '../utils/date';
 import { postUrl } from '../utils/post';
+import { withBase } from '../consts';
 
 interface Props {
   entry: CollectionEntry<'posts'>;
@@ -26,7 +27,7 @@ const { Content } = await render(entry);
             <Fragment>
               {' // '}
               {entry.data.categories.map((category) => (
-                <a href={`/categories/${encodeURIComponent(category)}/`}>{category}</a>
+                <a href={withBase(`/categories/${encodeURIComponent(category)}/`)}>{category}</a>
               ))}
             </Fragment>
           )
@@ -41,7 +42,7 @@ const { Content } = await render(entry);
         entry.data.tags.length > 0 && (
           <p class="post-sheet__tags">
             {entry.data.tags.map((tag) => (
-              <a href={`/tags/${encodeURIComponent(tag)}/`}>#{tag}</a>
+              <a href={withBase(`/tags/${encodeURIComponent(tag)}/`)}>#{tag}</a>
             ))}
           </p>
         )

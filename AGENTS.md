@@ -64,7 +64,8 @@ The repository splits licensing by asset kind — do not blur the two:
 - `src/scripts/*.ts`: browser-side code, plain-Vanilla-TS, imported from `src/scripts/main.ts`. Globe, palette and search must stay decoupled from Astro component markup — they bind to `[data-*]` attributes only.
 - `src/components/`: presentational Astro components. Post listing, article and taxonomy views are deliberately separate (PostCard / PostLayout / ArchiveList).
 - `src/utils/excerpt.ts`: excerpt generation and heading normalization. Keep these pure — no Hexo helpers, no component imports.
-- `src/consts.ts`: single source of truth for site metadata, menu, palette schemes and globe settings.
+- `src/consts.ts`: single source of truth for site metadata, menu, palette schemes and globe settings. It also exports `BASE` / `withBase`.
+- The site is served under the `/blogs` base path (GitHub Pages project site; the domain root belongs to other pages and must 404). Astro prefixes generated routes automatically, but never hand-written markup — every root-relative link in components must go through `BASE` / `withBase` from `src/consts.ts`.
 - `astro.config.ts` is the only Vite configuration surface (fonts, workers, base path). Do not add a separate `vite.config.ts`.
 - SEO output is split in two: the `@astrojs/sitemap` integration is registered in `astro.config.ts`, while `robots.txt` is emitted by the static route in `src/pages/robots.txt.ts`, which references `SITE.url`. `robots.txt` is therefore not a static file in `public/`.
 
@@ -85,7 +86,7 @@ furniture.
 ## Generated files
 
 - `dist/` (Astro output + Pagefind index) is generated and ignored.
-- `public/fonts/` ships the Departure Mono woff2; the CSS `@font-face` in `src/styles/main.css` references it via a public-path URL. `public/favicon.svg` provides the site favicon.
+- `src/assets/fonts/` holds the Departure Mono woff2; the CSS `@font-face` in `src/styles/main.css` references it with a relative URL that Vite resolves (correct under the `/blogs` base in dev and build). `public/favicon.svg` provides the site favicon.
 
 ## Git conventions
 

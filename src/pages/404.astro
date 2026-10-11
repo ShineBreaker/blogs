@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { BASE } from '../consts';
 ---
 
 <BaseLayout title="404" pageClass="404">
@@ -10,6 +11,6 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <p class="eyebrow">exit status 404</p>
     <h1 id="not-found-title">PAGE NOT FOUND</h1>
     <p>这条记录不在当前轨道上，或许已经被移动。</p>
-    <a class="button-link" href="/">[ RETURN HOME ]</a>
+    <a class="button-link" href={`${BASE}/`}>[ RETURN HOME ]</a>
   </section>
 </BaseLayout>
